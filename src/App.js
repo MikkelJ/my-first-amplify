@@ -1,15 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
+
+import API, { graphqlOperation } from '@aws-amplify/api';
+import PubSub from '@aws-amplify/pubsub';
+
+import { createTodo } from './graphql/mutations'
+
+import awsconfig from './aws-exports';
 import './App.css';
+
+// Configure Amplify
+API.configure(awsconfig);
+PubSub.configure(awsconfig);
+
+async function createNewTodo() {
+  const todo = { name: "Use AWS AppSync", description: "Realtime and Offline" };
+  await API.graphql(graphqlOperation(createTodo, {input: todo}));
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        
-        <h1>New web page comming soon!</h1>
-        
-      </header>
+     <button onClick={createNewTodo}>Add Todo</button>
     </div>
   );
 }
